@@ -1,7 +1,41 @@
+import  fs from 'fs';
 import express from 'express';
+import { rateLimit } from 'express-rate-limit'
+import e from 'express';
 const app = express();
 
 app.use(express.json());
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 10, // Limit each IP to 10 requests per `window` (here, per 15 minutes).
+	message: "Too many requests from this IP, please try again after 15 minutes"
+})
+
+app.use(limiter)
+
+app.use((req, res) => {
+    console.log(`undefined route: ${req.method} ${req.path}`);
+    res.status(404).json("This page is not a valid page");
+})
+
+app.use((req, res, next) => {
+    let  logdata = `${req.method} || ${req.path} || ${new Date().toISOString()}\n`;
+    fs.appedFile('log.txt', logdata, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    })
+    next();
+})
+
+app.use("/assets", express.static("public"));   
+
+app.use((err, req, res, next) => {
+    res.status(500).json({
+        "error": err.message
+    });
+})
 
 app.get('/', (req, res) => {
     res.send('Welcome to GlowDerma - Your Skincare Journey Starts Here');
@@ -114,10 +148,10 @@ let products = [
 ]
 
 app.get('/products', (req, res) => {
-    const { name, maxPrice } = req.query;
+    const { name, maxPrice } = req.body;
 
     if (name && maxPrice) {
-        const filteredProducts = products.filter(product => product.name === name && product.price <= maxPrice);
+        const filteredProducts = --products.filter(product => product.name === name && product.price <= maxPrice);
         return res.status(200).json(filteredProducts);
     }
 
