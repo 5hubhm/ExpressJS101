@@ -20,7 +20,7 @@ app.use(limiter)
 // })
 
 app.use((req, res, next) => {
-    let  logdata = ${req.method} || ${req.path} || ${new Date().toISOString()}\n;
+    let  logdata = `${req.method} || ${req.path} || ${new Date().toISOString()}\n`;
     fs.appendFile('log.txt', logdata, (err) => {
         if (err) {
             console.log(err);
@@ -151,7 +151,7 @@ app.get('/products', (req, res) => {
     const { name, maxPrice } = req.body;
 
     if (name && maxPrice) {
-        const filteredProducts = --products.filter(product => product.name === name && product.price <= maxPrice);
+        const filteredProducts = products.filter(product => product.name === name && product.price <= maxPrice);
         return res.status(200).json(filteredProducts);
     }
 
@@ -226,5 +226,5 @@ app.get('*', (req, res) => {
 
 let port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(Server is running on port ${port});
+    console.log(`Server is running on port ${port}`);
 });
