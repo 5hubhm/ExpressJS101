@@ -1,27 +1,27 @@
 import  fs from 'fs';
 import express from 'express';
 import { rateLimit } from 'express-rate-limit'
-import e from 'express';
+
 const app = express();
 
 app.use(express.json());
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 10, // Limit each IP to 10 requests per `window` (here, per 15 minutes).
+	limit: 15, // Limit each IP to 10 requests per window (here, per 15 minutes).
 	message: "Too many requests from this IP, please try again after 15 minutes"
 })
 
 app.use(limiter)
 
-app.use((req, res) => {
-    console.log(`undefined route: ${req.method} ${req.path}`);
-    res.status(404).json("This page is not a valid page");
-})
+// app.use((req, res) => {
+//     console.log(undefined route: ${req.method} ${req.path});
+//     res.status(404).json("This page is not a valid page");
+// })
 
 app.use((req, res, next) => {
-    let  logdata = `${req.method} || ${req.path} || ${new Date().toISOString()}\n`;
-    fs.appedFile('log.txt', logdata, (err) => {
+    let  logdata = ${req.method} || ${req.path} || ${new Date().toISOString()}\n;
+    fs.appendFile('log.txt', logdata, (err) => {
         if (err) {
             console.log(err);
         }
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use("/assets", express.static("public"));   
+app.use("/assets", express.static("public/1agLPjxTz2lgvcFMETmQfBg.png"));   
 
 app.use((err, req, res, next) => {
     res.status(500).json({
@@ -226,5 +226,5 @@ app.get('*', (req, res) => {
 
 let port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(Server is running on port ${port});
 });
