@@ -5,7 +5,13 @@ const app = express();
 // Set up Handlebars as the view engine
 const hbs = create({
   defaultLayout: "main",
+  helpers: {
+    repeat: (n) => {
+      return "⭐".repeat(n); // Repeat the star symbol based on rating
+    },
+  },
 });
+
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 
@@ -106,6 +112,7 @@ app.get("/testimonials", (req, res) => {
         date: "2024-01-18",
       },
     ];
+
     res.render("testimonials", {
       title: "Testimonials",
       testimonials,
